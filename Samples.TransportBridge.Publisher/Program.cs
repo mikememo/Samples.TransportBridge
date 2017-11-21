@@ -4,7 +4,6 @@ namespace Samples.TransportBridge.Publisher
     using System.Data.SqlClient;
     using System.Threading.Tasks;
     using NServiceBus;
-    using NServiceBus.Persistence.Sql;
     using Shared;
 
     static class Program
@@ -20,14 +19,7 @@ namespace Samples.TransportBridge.Publisher
             Console.Title = "Samples.TransportBridge.Publisher";
             var endpointConfiguration = new EndpointConfiguration("Samples.TransportBridge.Publisher");
 
-            var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            var connection = @"Data Source=.\SqlExpress;Initial Catalog=nsbBridge;Integrated Security=True";
-            persistence.SqlVariant(SqlVariant.MsSqlServer);
-            persistence.ConnectionBuilder(
-                connectionBuilder: () =>
-                {
-                    return new SqlConnection(connection);
-                });
+            endpointConfiguration.UsePersistence<InMemoryPersistence>();
 
             var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
             transport.ConnectionString("host=localhost");

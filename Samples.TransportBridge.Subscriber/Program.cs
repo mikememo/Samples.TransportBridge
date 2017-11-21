@@ -4,7 +4,6 @@ namespace Samples.TransportBridge.Subscriber
     using System.Data.SqlClient;
     using System.Threading.Tasks;
     using NServiceBus;
-    using NServiceBus.Persistence.Sql;
     using Shared;
 
     static class Program
@@ -19,15 +18,7 @@ namespace Samples.TransportBridge.Subscriber
             Console.Title = "Samples.TransportBridge.Subscriber";
             var endpointConfiguration = new EndpointConfiguration("Samples.TransportBridge.Subscriber");
 
-            var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            var connection = @"Data Source=.\SqlExpress;Initial Catalog=nsbBridge;Integrated Security=True";
-            persistence.SqlVariant(SqlVariant.MsSqlServer);
-            persistence.ConnectionBuilder(
-                connectionBuilder: () =>
-                {
-                    return new SqlConnection(connection);
-                });
-            persistence.SubscriptionSettings().DisableCache();
+            endpointConfiguration.UsePersistence<InMemoryPersistence>();
 
             var transport = endpointConfiguration.UseTransport<MsmqTransport>();
            

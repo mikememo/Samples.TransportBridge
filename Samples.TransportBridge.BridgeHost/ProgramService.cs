@@ -8,7 +8,6 @@ namespace Samples.TransportBridge.BridgeHost
     using NServiceBus;
     using NServiceBus.Bridge;
     using NServiceBus.Logging;
-    using NServiceBus.Persistence.Sql;
 
     [DesignerCategory("Code")]
     class ProgramService : ServiceBase
@@ -58,16 +57,7 @@ namespace Samples.TransportBridge.BridgeHost
                             transportExtensions.ConnectionString("host=localhost");                        
                         });
 
-                bridgeConfiguration.UseSubscriptionPersistece<SqlPersistence>((e, c) =>
-                    {
-                        c.SqlVariant(SqlVariant.MsSqlServer);
-                        c.ConnectionBuilder(() =>
-                            new SqlConnection(
-                                @"Data Source=.\SqlExpress;Initial Catalog=nsbBridge;Integrated Security=True"));
-                        c.SubscriptionSettings().DisableCache();
-                        e.EnableInstallers();
-                    }
-                );
+                bridgeConfiguration.UseSubscriptionPersistece<InMemoryPersistence>((e, c) => { });
             
                 bridgeConfiguration.AutoCreateQueues();
                 _bridge = bridgeConfiguration.Create();
