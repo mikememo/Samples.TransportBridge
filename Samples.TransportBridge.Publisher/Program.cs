@@ -1,20 +1,18 @@
 namespace Samples.TransportBridge.Publisher
 {
     using System;
-    using System.Data.SqlClient;
     using System.Threading.Tasks;
     using NServiceBus;
     using Shared;
 
-    static class Program
+    internal static class Program
     {
-
-        static void Main()
+        private static void Main()
         {
             AsyncMain().GetAwaiter().GetResult();
         }
 
-        static async Task AsyncMain()
+        private static async Task AsyncMain()
         {
             Console.Title = "Samples.TransportBridge.Publisher";
             var endpointConfiguration = new EndpointConfiguration("Samples.TransportBridge.Publisher");
@@ -34,7 +32,7 @@ namespace Samples.TransportBridge.Publisher
             await endpointInstance.Stop().ConfigureAwait(false);
         }
 
-        static async Task Start(IEndpointInstance endpointInstance)
+        private static async Task Start(IEndpointInstance endpointInstance)
         {
             Console.WriteLine("Press '1' to publish the OrderReceived event");
             Console.WriteLine("Press any other key to exit");

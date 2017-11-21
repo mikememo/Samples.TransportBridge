@@ -1,19 +1,18 @@
 namespace Samples.TransportBridge.Subscriber
 {
     using System;
-    using System.Data.SqlClient;
     using System.Threading.Tasks;
     using NServiceBus;
     using Shared;
 
-    static class Program
+    internal static class Program
     {
-        static void Main()
+        private static void Main()
         {
             AsyncMain().GetAwaiter().GetResult();
         }
 
-        static async Task AsyncMain()
+        private static async Task AsyncMain()
         {
             Console.Title = "Samples.TransportBridge.Subscriber";
             var endpointConfiguration = new EndpointConfiguration("Samples.TransportBridge.Subscriber");

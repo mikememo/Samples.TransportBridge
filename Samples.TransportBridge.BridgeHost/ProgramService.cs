@@ -2,7 +2,6 @@ namespace Samples.TransportBridge.BridgeHost
 {
     using System;
     using System.ComponentModel;
-    using System.Data.SqlClient;
     using System.ServiceProcess;
     using System.Threading.Tasks;
     using NServiceBus;
@@ -54,7 +53,7 @@ namespace Samples.TransportBridge.BridgeHost
                         endpointName: "TransportBridge.RabbitBank",
                         customization: transportExtensions =>
                         {
-                            transportExtensions.ConnectionString("host=localhost");                        
+                            transportExtensions.ConnectionString("host=localhost");
                         });
 
                 bridgeConfiguration.UseSubscriptionPersistece<InMemoryPersistence>((e, c) => { });
@@ -62,28 +61,12 @@ namespace Samples.TransportBridge.BridgeHost
                 bridgeConfiguration.AutoCreateQueues();
                 _bridge = bridgeConfiguration.Create();
                 await _bridge.Start().ConfigureAwait(false);
-
-                PerformStartupOperations();
             }
             catch (Exception exception)
             {
                 Logger.Fatal("Failed to start", exception);
                 Environment.FailFast("Failed to start", exception);
             }
-        }
-
-        void PerformStartupOperations()
-        {
-        }
-
-        Task OnCriticalError(ICriticalErrorContext context)
-        {
-            //TODO: Decide if shutting down the process is the best response to a critical error
-            // https://docs.particular.net/nservicebus/hosting/critical-errors
-            var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
-            Logger.Fatal(fatalMessage, context.Exception);
-            Environment.FailFast(fatalMessage, context.Exception);
-            return Task.FromResult(0);
         }
 
         protected override void OnStop()
